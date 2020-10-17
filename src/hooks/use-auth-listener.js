@@ -3,10 +3,10 @@ import { FirebaseContext } from '../context/firebase';
 
 export default function useAuthListener() {
   const [user, setUser] = useState(JSON.parse(localStorage.getItem('authUser')));
-  const { firebase } = useContext(FirebaseContext);
+  const { auth } = useContext(FirebaseContext);
 
   useEffect(() => {
-    const listener = firebase.auth().onAuthStateChanged((authUser) => {
+    const listener = auth.onAuthStateChanged((authUser) => {
       if (authUser) {
         localStorage.setItem('authUser', JSON.stringify(authUser));
         setUser(authUser);
@@ -17,7 +17,7 @@ export default function useAuthListener() {
     });
 
     return () => listener();
-  }, []);
+  }, [auth]);
 
   return { user };
 }

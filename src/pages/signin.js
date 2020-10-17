@@ -8,17 +8,16 @@ import * as ROUTES from '../constants/routes';
 
 export default function Signin() {
   const history = useHistory();
-  const { firebase } = useContext(FirebaseContext);
+  const { auth } = useContext(FirebaseContext);
 
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
   const isInvalid = password === '' || emailAddress === '';
-  const handleSignIn = (event) => {
-    event.PreventDefault();
-    firebase
-      .auth()
+  const handleSignin = (e) => {
+    e.preventDefault();
+    auth
       .signInWithEmailAndPassword(emailAddress, password)
       .then(() => {
         history.push(ROUTES.BROWSE);
@@ -36,7 +35,7 @@ export default function Signin() {
         <Form>
           <Form.Title>Sign in</Form.Title>
           {error && <Form.Error>{error}</Form.Error>}
-          <Form.Base onSubmit={handleSignIn} method="POST">
+          <Form.Base onSubmit={(e) => handleSignin(e)} method="POST">
             <Form.Input
               placeholder="Email address"
               value={emailAddress}
@@ -44,21 +43,21 @@ export default function Signin() {
             />
             <Form.Input
               type="password"
-              placeholder="Password"
-              autocomplete="off"
               value={password}
+              autoComplete="off"
+              placeholder="Password"
               onChange={({ target }) => setPassword(target.value)}
             />
             <Form.Submit disabled={isInvalid} type="submit">
               Sign in
             </Form.Submit>
-            <Form.Text>
-              New to Netflix? <Form.Link to={ROUTES.SIGN_UP}>Sign up now.</Form.Link>
-            </Form.Text>
-            <Form.TextSmall>
-              This page is protected by Google reCaptcha to ensure you are not a bot.
-            </Form.TextSmall>
           </Form.Base>
+          <Form.Text>
+            New to Netflix? <Form.Link to={ROUTES.SIGN_UP}>Sign up now.</Form.Link>
+          </Form.Text>
+          <Form.TextSmall>
+            This page is protected by Google reCAPTCHA to ensure you are not a bot.
+          </Form.TextSmall>
         </Form>
       </HeaderContainer>
       <FooterContainer />
